@@ -1,111 +1,656 @@
+/*
+  Vuln Harness visual theme.
+
+  Design plan (frontend-design skill applied):
+  - Palette: dark navy (not flat near-black) + two accent hues instead of one —
+    teal (#4fd1c5) reads as "detection/discovery" (VDH), orange (#ff7a30) as
+    "flagged/validated" (VVS). The two colors are the whole product story in
+    miniature: a finding is discovered (teal), then validated (orange).
+  - Signature element: a "pipeline trace" — a connecting vertical line with
+    lit/unlit dot markers down the stage rail, and a one-shot scan-line sweep
+    across a stage card. Both literalize what the tool actually does (scans
+    code, stage by stage) instead of decorating with an unrelated motif.
+    The rail's sequence markers are justified here (unlike generic 01/02/03
+    numbering) because the content genuinely is an ordered pipeline.
+  - Type: system sans for prose, system mono reserved for anything
+    "machine-authored" (engine badges, technical detail, glossary terms) so
+    mono reads as a deliberate register shift, not a default.
+  - Motion: a single restrained keyframe (fade-in + trace sweep), snappy
+    ease-out easing, fully disabled under prefers-reduced-motion.
+*/
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --color-bg: #0b1220;
+  --color-bg-elevated: #121b2e;
+  --color-bg-sunken: #070b15;
+  --color-border: #1f2b42;
+  --color-border-soft: #182339;
+  --color-text: #e6ebf5;
+  --color-text-muted: #9aa8c2;
+  --color-accent: #ff7a30;
+  --color-accent-strong: #ff9354;
+  --color-vdh: #4fd1c5;
+  --color-vvs: #ff7a30;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-pill: 999px;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 40px;
+  --space-6: 64px;
+
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --glow-vdh: 0 0 0 3px rgba(79, 209, 197, 0.16);
+  --glow-vvs: 0 0 0 3px rgba(255, 122, 48, 0.16);
+
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  background: var(--color-bg);
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
+  color: var(--color-text);
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(255, 122, 48, 0.28);
+  color: var(--color-text);
+}
+
+/* Keyboard accessibility: visible focus ring everywhere, mouse-click stays quiet. */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.site-header__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-size: 1.05rem;
+}
+
+/* Brand mark: a teal-to-orange chip standing in for the two-engine pipeline
+   (discovery -> validation) this whole site explains. */
+.site-header__logo::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--color-vdh), var(--color-vvs));
+}
+
+.site-header nav {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.site-header nav a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: var(--space-1) 0;
+  border-bottom: 2px solid transparent;
+  transition: color 150ms var(--ease-snap), border-color 150ms var(--ease-snap);
+}
+
+.site-header nav a.active,
+.site-header nav a:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+}
+
+/* ---------- Layout shell ---------- */
+
+main {
+  flex: 1;
+  max-width: 1040px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+}
+
+/* ---------- Landing ---------- */
+
+.landing__hero {
+  position: relative;
+  text-align: center;
+  padding: var(--space-6) var(--space-3) var(--space-5);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Faint scan-grid texture: the one atmospheric flourish, confined to the
+   hero so it reads as "console" rather than generic dark-mode noise. */
+.landing__hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(154, 168, 194, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(154, 168, 194, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 20%, #000 40%, transparent 100%);
+}
+
+.landing__hero h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-3);
+}
+
+.landing__hero p {
+  color: var(--color-text-muted);
+  max-width: 620px;
+  margin: 0 auto var(--space-4);
+}
+
+.landing__cta {
+  display: inline-block;
+  background: var(--color-accent);
+  color: #14100c;
+  font-weight: 700;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background 150ms var(--ease-snap), transform 150ms var(--ease-snap), box-shadow 150ms var(--ease-snap);
+}
+
+.landing__cta:hover {
+  background: var(--color-accent-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--glow-vvs);
+}
+
+.landing__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.landing__card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-top: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  transition: border-top-color 200ms var(--ease-snap), transform 200ms var(--ease-snap);
+}
+
+.landing__card:hover {
+  border-top-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.landing__card h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.landing__card p {
+  color: var(--color-text-muted);
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* ---------- Walkthrough ---------- */
+
+.walkthrough {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--space-5);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.progress-rail ol {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* The pipeline trace: a vertical line running through the rail, echoing a
+   signal trace / scan path rather than a plain nav list. Justified because
+   the stages genuinely are an ordered sequence. */
+.progress-rail ol::before {
+  content: "";
+  position: absolute;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  left: 20px;
+  width: 1px;
+  background: linear-gradient(var(--color-border), var(--color-border));
+}
+
+.progress-rail__item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  padding: var(--space-2) var(--space-3) var(--space-2) 40px;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition: background 150ms var(--ease-snap), border-color 150ms var(--ease-snap), color 150ms var(--ease-snap);
+}
+
+/* Trace marker: a dot on the line for every stage, ringed with the page
+   background so it reads as punched through the trace, not sitting on it. */
+.progress-rail__item::before {
+  content: "";
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-border);
+  box-shadow: 0 0 0 3px var(--color-bg);
+  transition: background 150ms var(--ease-snap), box-shadow 150ms var(--ease-snap);
+  z-index: 1;
+}
+
+.progress-rail__item:hover {
+  background: var(--color-bg-elevated);
+}
+
+.progress-rail__item--active {
+  background: var(--color-bg-elevated);
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.progress-rail__item--active::before {
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-bg), 0 0 8px 1px rgba(255, 122, 48, 0.6);
+}
+
+.progress-rail__engine {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-accent);
+}
+
+.progress-rail__name {
+  font-size: 0.9rem;
+}
+
+.walkthrough__panel {
+  min-width: 0;
+}
+
+/* ---------- Stage card ---------- */
+
+.stage-card {
+  position: relative;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  overflow: hidden;
+  animation: fade-in 260ms var(--ease-snap);
+}
+
+/* One-shot scan-line sweep across the top edge on mount — a small, literal
+   nod to "this pipeline scans code" rather than a generic entrance effect. */
+.stage-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-strong), transparent);
+  animation: scan-sweep 900ms var(--ease-snap);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scan-sweep {
+  from {
+    left: -30%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.stage-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.stage-card__header h2 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.stage-card > p {
+  color: var(--color-text);
+}
+
+.engine-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.engine-badge--vdh {
+  color: var(--color-vdh);
+  border-color: var(--color-vdh);
+  box-shadow: var(--glow-vdh);
+}
+
+.engine-badge--vvs {
+  color: var(--color-vvs);
+  border-color: var(--color-vvs);
+  box-shadow: var(--glow-vvs);
+}
+
+.stage-card__toggle {
+  margin-top: var(--space-3);
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-3);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 150ms var(--ease-snap), color 150ms var(--ease-snap);
+}
+
+.stage-card__toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.stage-card__technical {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-bg-sunken);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.stage-card__terms {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---------- Term tooltip ---------- */
+
+.term-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.term-tooltip__trigger {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.term-tooltip__trigger:hover {
+  color: var(--color-accent-strong);
+}
+
+.term-tooltip__definition {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  max-width: 32ch;
+}
+
+/* ---------- Walkthrough nav ---------- */
+
+.walkthrough__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-4);
+}
+
+.walkthrough__position {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.walkthrough__nav button {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 150ms var(--ease-snap), transform 150ms var(--ease-snap);
+}
+
+.walkthrough__nav button:not(:disabled):hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.walkthrough__nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Glossary ---------- */
+
+.glossary h1 {
+  font-size: 1.8rem;
+  margin-bottom: var(--space-4);
+}
+
+.glossary input[type="search"] {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  font: inherit;
+  margin-bottom: var(--space-4);
+}
+
+.glossary input[type="search"]::placeholder {
+  color: var(--color-text-muted);
+}
+
+.glossary dl {
+  margin: 0;
+}
+
+.glossary__entry {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.glossary__entry dt {
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.glossary__entry dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+}
+
+.glossary__links {
+  margin-top: var(--space-2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.glossary__links a {
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.glossary__links a:hover {
+  color: var(--color-accent-strong);
+  text-decoration: underline;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 720px) {
+  .site-header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  main {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .walkthrough {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .progress-rail ol {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+
+  .progress-rail ol::before {
+    display: none;
+  }
+
+  .progress-rail__item {
+    flex: 0 0 auto;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .progress-rail__item::before {
+    display: none;
+  }
+}
+
+/* ---------- Motion preference ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

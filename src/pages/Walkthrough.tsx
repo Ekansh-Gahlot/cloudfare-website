@@ -44,7 +44,7 @@ export function Walkthrough() {
         onSelect={(stageId) => setCurrentIndex(indexForStageId(stageId))}
       />
       <div className="walkthrough__panel">
-        <StageCard stage={currentStage} />
+        <StageCard key={currentStage.id} stage={currentStage} />
         <div className="walkthrough__nav">
           <button type="button" disabled={isFirst} onClick={() => setCurrentIndex((i) => i - 1)}>
             Previous

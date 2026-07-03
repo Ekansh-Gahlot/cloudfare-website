@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useSearchParams } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import { Walkthrough } from "./Walkthrough";
 import { PIPELINE_STAGES } from "../data/pipeline";
@@ -9,6 +9,19 @@ function renderWalkthrough(initialEntries = ["/walkthrough"]) {
   return render(
     <MemoryRouter initialEntries={initialEntries}>
       <Walkthrough />
+    </MemoryRouter>
+  );
+}
+
+function WalkthroughWithLocationProbe({ initialEntries }: { initialEntries: string[] }) {
+  function LocationProbe() {
+    const [params] = useSearchParams();
+    return <div data-testid="location-probe">{params.get("stage")}</div>;
+  }
+  return (
+    <MemoryRouter initialEntries={initialEntries}>
+      <Walkthrough />
+      <LocationProbe />
     </MemoryRouter>
   );
 }
@@ -47,5 +60,12 @@ describe("Walkthrough", () => {
   it("disables Previous on the first stage and Next on the last stage", async () => {
     renderWalkthrough([`/walkthrough?stage=${PIPELINE_STAGES[PIPELINE_STAGES.length - 1].id}`]);
     expect(screen.getByRole("button", { name: "Next" })).toBeDisabled();
+  });
+
+  it("keeps the ?stage= URL param in sync when navigating via Next", async () => {
+    render(<WalkthroughWithLocationProbe initialEntries={["/walkthrough"]} />);
+    expect(screen.getByTestId("location-probe")).toHaveTextContent(PIPELINE_STAGES[0].id);
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+    expect(screen.getByTestId("location-probe")).toHaveTextContent(PIPELINE_STAGES[1].id);
   });
 });
